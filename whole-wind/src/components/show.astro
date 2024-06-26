@@ -1,5 +1,19 @@
 ---
 const { show } =  Astro.props;
+import Chip from './chip.astro';
+
+function getStarRating(rating) {
+        const roundedRating = Math.round(rating * 2) / 2; // Round to nearest 0.5
+        const stars = [];
+        for (let i = 1; i <= 10; i++) {
+            if (roundedRating >= i) {
+                stars.push('★'); // Full star (★)
+            } else {
+                stars.push('☆'); // Empty space
+            }
+        }
+        return stars.join(' '); // Join stars with space
+    }
 ---
 <div>
     <div
@@ -10,9 +24,14 @@ const { show } =  Astro.props;
         <img class="show--image" src={show.image} alt={show.name} />
         <div class="show--text">
           <h1>{show.name}</h1>
-          <h3>{show.network}</h3>
+          {show.genres.map((genre) => (
+            <Chip text={genre}></Chip>
+          ))}
+          <h3>{show.network ? show.network : 'Unknown streaming'}</h3>
+          <div class="star-rating">
+            {getStarRating(show.rating)}
         </div>
-        <!-- <p>{show.summary?.slice(0, 250)}</p> -->
+        </div>
       </div>
     </div>
   </div>
@@ -22,8 +41,8 @@ const { show } =  Astro.props;
   .show--card {
     margin: 20px;
     border-radius: 8px;
-    width: 350px;
-    height: 450px;
+    width: 375px;
+    height: 550px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
     cursor: pointer;
     overflow: scroll;
@@ -38,12 +57,25 @@ const { show } =  Astro.props;
   }
 
   .show--image {
-    width: 350px;
+    width: 375px;
     height: 300px;
     object-fit: cover;
   }
 
   .show--text {
     margin: 20px;
+  }
+
+  .star-rating {
+      display: flex;
+      align-items: center;
+      margin-top: 8px;
+      color: #f8ce0b;
+      font-size: 1.3rem;
+  }
+
+  .star-rating span {
+      color: #f8ce0b;
+      margin-right: 4px;
   }
 </style>
