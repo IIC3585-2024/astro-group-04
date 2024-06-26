@@ -1,0 +1,49 @@
+---
+const { show } =  Astro.props;
+---
+<div>
+    <div
+    class="show--card"
+  >
+    <div>
+      <div>
+        <img class="show--image" src={show.image} alt={show.name} />
+        <div class="show--text">
+          <h1>{show.name}</h1>
+          <h3>{show.network}</h3>
+        </div>
+        <!-- <p>{show.summary?.slice(0, 250)}</p> -->
+      </div>
+    </div>
+  </div>
+</div>
+
+<style>
+  .show--card {
+    margin: 20px;
+    border-radius: 8px;
+    width: 350px;
+    height: 450px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    cursor: pointer;
+    overflow: scroll;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    transition-duration: 0.5s;
+  }
+
+  .show--card:hover {
+    transform: scale(1.01);
+  }
+
+  .show--image {
+    width: 350px;
+    height: 300px;
+    object-fit: cover;
+  }
+
+  .show--text {
+    margin: 20px;
+  }
+</style>
