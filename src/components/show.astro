@@ -3,17 +3,17 @@ const { show } =  Astro.props;
 import Chip from './chip.astro';
 
 function getStarRating(rating) {
-        const roundedRating = Math.round(rating * 2) / 2; // Round to nearest 0.5
-        const stars = [];
-        for (let i = 1; i <= 10; i++) {
-            if (roundedRating >= i) {
-                stars.push('★'); // Full star (★)
-            } else {
-                stars.push('☆'); // Empty space
-            }
-        }
-        return stars.join(' '); // Join stars with space
-    }
+  const roundedRating = Math.round(rating * 2) / 2; // Round to nearest 0.5
+  const stars = [];
+  for (let i = 1; i <= 10; i++) {
+      if (roundedRating >= i) {
+          stars.push('★'); 
+      } else {
+          stars.push('☆'); 
+      }
+  }
+  return stars.join(' '); 
+}
 ---
 <div>
     <div
