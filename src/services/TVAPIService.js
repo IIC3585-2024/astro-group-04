@@ -1,3 +1,4 @@
+
 const transformArray = (characters) => {
     return characters.map((c) => {
         return {

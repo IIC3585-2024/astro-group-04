@@ -47,7 +47,83 @@ function getStarRating(rating) {
       <p>{show.summary}</p>
     </div>
   </div>
+
+  <!-- Comment Form -->
+  <div class="comment-form">
+    <h2>Leave a Comment</h2>
+    <form id="commentForm">
+      <input type="hidden" id="showId" value={id} />
+      <div>
+        <label for="author">Author</label>
+        <br/>
+        <input class="input" type="text" id="author" name="author" required />
+      </div>
+      <div>
+        <label for="body">Comment</label>
+        <br/>
+        <textarea class="input" id="body" name="body" required></textarea>
+      </div>
+      <div>
+        <label for="rating">Rating</label>
+        <br/>
+        <input class="input" type="number" id="rating" name="rating" min="1" max="10" required/>
+      </div>
+      <button type="submit">Submit</button>
+    </form>
+  </div>
+
+  <!-- Display Comments -->
+  <div class="comments">
+    <h2>Comments</h2>
+    <div id="commentsContainer"></div>
+  </div>
 </Layout>
+
+
+<script>
+  const form = document.getElementById('commentForm');
+  const commentsContainer = document.getElementById('commentsContainer');
+
+  function getComments() {
+    const showId = document.getElementById('showId').value;
+    const comments = JSON.parse(localStorage.getItem(`comments-${showId}`)) || [];
+    return comments;
+  }
+
+  function displayComments() {
+    const comments = getComments();
+    commentsContainer.innerHTML = '';
+    if (comments.length === 0) {
+      commentsContainer.innerHTML = '<p>No comments yet. Be the first to comment!</p>';
+    } else {
+      comments.forEach(comment => {
+        const commentElement = document.createElement('div');
+        commentElement.classList.add('comment');
+        commentElement.innerHTML = `
+          <p><strong>${comment.author}</strong> says:</p>
+          <p>${comment.body}</p>
+        `;
+        commentsContainer.appendChild(commentElement);
+      });
+    }
+  }
+
+  form.addEventListener('submit', (event) => {
+    event.preventDefault();
+    const showId = document.getElementById('showId').value;
+    const author = document.getElementById('author').value;
+    const body = document.getElementById('body').value;
+    const comments = getComments();
+    comments.push({ author, body });
+    localStorage.setItem(`comments-${showId}`, JSON.stringify(comments));
+    displayComments();
+    form.reset();
+  });
+
+  document.addEventListener('DOMContentLoaded', () => {
+    displayComments();
+  });
+</script>
 
 <style>
   .show-detail {
@@ -79,5 +155,22 @@ function getStarRating(rating) {
   .star-rating {
     color: #f8ce0b;
     font-size: 1.3rem;
+  }
+
+  .input {
+    width: 300px;
+    padding: 10px;
+    margin: 5px 0;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+  }
+
+  button {
+    padding: 10px 20px;
+    background-color: #FF5733;
+    color: white;
+    border: none;
+    border-radius: 1rem;
+    cursor: pointer;
   }
 </style>
