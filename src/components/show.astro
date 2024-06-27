@@ -1,5 +1,5 @@
 ---
-const { show } =  Astro.props;
+const { show } = Astro.props;
 import Chip from './chip.astro';
 
 function getStarRating(rating) {
@@ -15,29 +15,28 @@ function getStarRating(rating) {
   return stars.join(' '); 
 }
 ---
-<div>
-    <div
-    class="show--card"
-  >
-    <div>
-      <div>
-        <img class="show--image" src={show.image} alt={show.name} />
-        <div class="show--text">
-          <h1>{show.name}</h1>
-          {show.genres.map((genre) => (
-            <Chip text={genre}></Chip>
-          ))}
-          <h3>{show.network ? show.network : 'Unknown streaming'}</h3>
-          <div class="star-rating">
-            {getStarRating(show.rating)}
-        </div>
-        </div>
+<a href={`/shows/${show.id}`} class="show--link">
+  <div class="show--card">
+    <img class="show--image" src={show.image} alt={show.name} />
+    <div class="show--text">
+      <h1>{show.name}</h1>
+      {show.genres.map((genre) => (
+        <Chip text={genre}></Chip>
+      ))}
+      <h3>{show.network ? show.network : 'Unknown streaming'}</h3>
+      <div class="star-rating">
+        {getStarRating(show.rating)}
       </div>
     </div>
   </div>
-</div>
+</a>
 
 <style>
+  .show--link {
+    text-decoration: none;
+    color: inherit;
+  }
+
   .show--card {
     margin: 20px;
     border-radius: 8px;
@@ -67,15 +66,15 @@ function getStarRating(rating) {
   }
 
   .star-rating {
-      display: flex;
-      align-items: center;
-      margin-top: 8px;
-      color: #f8ce0b;
-      font-size: 1.3rem;
+    display: flex;
+    align-items: center;
+    margin-top: 8px;
+    color: #f8ce0b;
+    font-size: 1.3rem;
   }
 
   .star-rating span {
-      color: #f8ce0b;
-      margin-right: 4px;
+    color: #f8ce0b;
+    margin-right: 4px;
   }
 </style>

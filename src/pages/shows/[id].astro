@@ -1,0 +1,83 @@
+---
+import Layout from "../../layouts/layout.astro";
+import { getShow } from "../../services/TVAPIService";
+import Chip from "../../components/chip.astro";
+
+// Get the ID from the URL
+const { id } = Astro.params;
+
+// Fetch all shows and find the one matching the ID
+const show = await getShow(id);
+
+if (!show) {
+  throw new Error(`Show with ID ${id} not found`);
+}
+
+function getStarRating(rating) {
+  const roundedRating = Math.round(rating * 2) / 2; // Round to nearest 0.5
+  const stars = [];
+  for (let i = 1; i <= 10; i++) {
+      if (roundedRating >= i) {
+          stars.push('★'); 
+      } else {
+          stars.push('☆'); 
+      }
+  }
+  return stars.join(' '); 
+}
+---
+<Layout>
+  <div class="show-detail">
+    <!-- {show} -->
+    <img class="show--image" src={show.image} alt={show.name} />
+    <div class="show--text">
+      <h1>{show.name}</h1>
+      <h2>Seasons </h2>
+      <h3>{
+        show.seasons.map((season, index) => 'S' + (index + 1) + ': ' + season.number).join(" - ")
+        }
+        </h3>
+      {show.genres.map((genre) => (
+        <Chip text={genre}></Chip>
+      ))}
+      <h3>Watch in {show.network ? show.network : 'Unknown streaming'}</h3>
+      <div class="star-rating">
+        {getStarRating(show.rating)}
+      </div>
+      <p>{show.summary}</p>
+    </div>
+  </div>
+</Layout>
+
+<style>
+  .show-detail {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin: 20px;
+  }
+
+  .show--image {
+    width: 400px;
+    height: 300px;
+    object-fit: cover;
+  }
+
+  .show--text {
+    margin: 20px;
+    text-align: center;
+  }
+
+  .genre {
+    display: inline-block;
+    margin-right: 5px;
+    padding: 2px 5px;
+    background-color: #eee;
+    border-radius: 3px;
+  }
+
+  .star-rating {
+    color: #f8ce0b;
+    font-size: 1.3rem;
+  }
+</style>

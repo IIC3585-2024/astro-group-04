@@ -1,4 +1,4 @@
-const transformData = (characters) => {
+const transformArray = (characters) => {
     return characters.map((c) => {
         return {
             id: c.show.id,
@@ -19,14 +19,70 @@ const transformData = (characters) => {
     });
 };
 
-export const getShows = async (query = 'girl') => {
+const transformData = (show, seasons) => {
+    // return characters.map((c) => {
+        console.log(show.id)
+        console.log(seasons.number, "number")
+        return {
+            id: show.id,
+            name: show.name,
+            summary: show.summary,
+            premiered: show.premiered,
+            ended: show.ended,
+            url: show.url,
+            type: show.type,
+            genres: show.genres,
+            runtime: show.runtime,
+            officialSite: show.officialSite,
+            rating: show.rating.average,
+            seasons: seasons.map((s) => {
+                return {
+                    number: s.number,
+                }
+            }),
+            network: show.network ? show.network.name : 'N/A',
+            image: show.image ? show.image.medium : 'https://via.placeholder.com/210x295',
+        };
+    // });
+};
+
+async function api(url) {
+    console.log(`https://api.tvmaze.com/${url}`)
+    let response = await fetch(`https://api.tvmaze.com/${url}`);
+    response = await response.json();
+    return response
+}
+
+export const getShows = async (query = 'dragon') => {
     try {
-        const response = await fetch(`https://api.tvmaze.com/search/shows?q=${query}`);
-        const characters = await response.json();
-        console.log(characters, "characters");
-        const transformedData = transformData(characters);
-        console.log(transformedData, "transformedData");
+        const response = await api(`search/shows?q=${query}`);
+        const transformedData = transformArray(response);
         return transformedData;
+    } catch (error) {
+        console.error('Error fetching data:', error);
+        return [];
+    }
+};
+
+export const getShow = async (id) => {
+    try {
+        const show = await api(`shows/${id}`);
+        const seasons = await api(`shows/${id}/seasons`);
+        console.log(seasons, "seasons")
+        const transformedData = transformData(show, seasons);
+        return transformedData;
+    } catch (error) {
+        console.error('Error fetching data:', error);
+        return [];
+    }
+};
+
+export const getShowSeasons = async (id) => {
+    try {
+        const response = await api(`shows/${id}/seasons`);
+        // const transformedData = transformData(response);
+        console.log(response, "seasons")
+        return response;
     } catch (error) {
         console.error('Error fetching data:', error);
         return [];
