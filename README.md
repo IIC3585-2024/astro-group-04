@@ -1,3 +1,9 @@
+To run 
+```
+npm run dev
+```
+
+
 # Astro Starter Kit: Basics
 
 ```sh
